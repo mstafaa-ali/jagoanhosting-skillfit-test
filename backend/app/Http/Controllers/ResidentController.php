@@ -7,15 +7,28 @@ use Illuminate\Http\Request;
 
 class ResidentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Resident::all();
+        $query = Resident::query();
+
+        if ($request->query('status') === 'active') {
+            $query->whereHas('houses', function ($q) {
+                $q->where('is_active', true);
+            });
+        } elseif ($request->query('status') === 'inactive') {
+            $query->whereDoesntHave('houses', function ($q) {
+                $q->where('is_active', true);
+            });
+        }
+
+        return $query->get();
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'nama_lengkap' => 'required|string',
+            'alamat' => 'required|string',
             'foto_ktp' => 'nullable|image',
             'status_penghuni' => 'required|in:tetap,kontrak',
             'nomor_telepon' => 'required|string',
@@ -38,6 +51,7 @@ class ResidentController extends Controller
     {
         $data = $request->validate([
             'nama_lengkap' => 'sometimes|string',
+            'alamat' => 'sometimes|string',
             'foto_ktp' => 'nullable|image',
             'status_penghuni' => 'sometimes|in:tetap,kontrak',
             'nomor_telepon' => 'sometimes|string',

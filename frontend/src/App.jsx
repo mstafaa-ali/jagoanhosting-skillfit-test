@@ -1,46 +1,41 @@
-import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
-import { AuthProvider, useAuth } from './Auth';
-import Login from './Login';
-
-// ponytail: single file layout instead of components/layout/ folder
-function Layout({ children }) {
-  const { logout } = useAuth();
-  return (
-    <div className="app-container">
-      <nav className="sidebar glass-card" style={{ borderRadius: 0, borderTop: 0, borderBottom: 0, borderLeft: 0 }}>
-        <h2 style={{ marginBottom: '2rem', color: 'var(--accent-color)' }}>RT Admin</h2>
-        <Link to="/">Dashboard</Link>
-        <Link to="/residents">Penghuni</Link>
-        <button onClick={logout} className="btn-primary" style={{ marginTop: 'auto', display: 'block', width: '100%', position: 'absolute', bottom: '2rem', width: 'calc(100% - 2rem)' }}>
-          Logout
-        </button>
-      </nav>
-      <main className="main-content">
-        {children}
-      </main>
-    </div>
-  );
-}
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import LoginPage from './pages/LoginPage';
+import { MainLayout } from './components/layout/MainLayout';
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth();
-  return user ? <Layout>{children}</Layout> : <Navigate to="/login" replace />;
+  return user ? <MainLayout>{children}</MainLayout> : <Navigate to="/login" replace />;
 }
 
-// Minimal placeholder pages for layout testing
-const Dashboard = () => <div><h2>Dashboard</h2><p>Selamat datang di sistem administrasi RT.</p></div>;
-const Residents = () => <div><h2>Penghuni</h2><p>Daftar penghuni.</p></div>;
+import DashboardPage from './pages/DashboardPage';
+import ResidentsPage from './pages/ResidentsPage';
+import HousesPage from './pages/HousesPage';
+import HouseDetailPage from './pages/HouseDetailPage';
+import BillingsPage from './pages/BillingsPage';
+import ExpensesPage from './pages/ExpensesPage';
+import ReportsPage from './pages/ReportsPage';
+import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from './context/ThemeContext';
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-          <Route path="/residents" element={<ProtectedRoute><Residents /></ProtectedRoute>} />
-        </Routes>
-      </AuthProvider>
-    </BrowserRouter>
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <BrowserRouter>
+        <AuthProvider>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+            <Route path="/residents" element={<ProtectedRoute><ResidentsPage /></ProtectedRoute>} />
+            <Route path="/houses" element={<ProtectedRoute><HousesPage /></ProtectedRoute>} />
+            <Route path="/houses/:id" element={<ProtectedRoute><HouseDetailPage /></ProtectedRoute>} />
+            <Route path="/billings" element={<ProtectedRoute><BillingsPage /></ProtectedRoute>} />
+            <Route path="/expenses" element={<ProtectedRoute><ExpensesPage /></ProtectedRoute>} />
+            <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
+          </Routes>
+          <Toaster position="top-center" richColors />
+        </AuthProvider>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }

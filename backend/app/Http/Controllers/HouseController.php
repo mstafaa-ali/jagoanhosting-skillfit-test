@@ -10,7 +10,9 @@ class HouseController extends Controller
 {
     public function index()
     {
-        return House::all();
+        return House::with(['residents' => function($q) {
+            $q->wherePivot('is_active', true);
+        }])->get();
     }
 
     public function store(Request $request)
@@ -18,7 +20,6 @@ class HouseController extends Controller
         $data = $request->validate([
             'nomor_rumah' => 'required|string|unique:houses',
             'alamat' => 'required|string',
-            'blok' => 'required|string',
             'status' => 'required|in:dihuni,tidak_dihuni',
         ]);
 
@@ -28,7 +29,7 @@ class HouseController extends Controller
     public function show(House $house)
     {
         // ponytail: assuming relations exist or will exist on model
-        $house->load(['residents', 'billings']);
+        $house->load(['residents', 'billings.feeType']);
         return $house;
     }
 
@@ -37,7 +38,6 @@ class HouseController extends Controller
         $data = $request->validate([
             'nomor_rumah' => 'sometimes|string|unique:houses,nomor_rumah,' . $house->id,
             'alamat' => 'sometimes|string',
-            'blok' => 'sometimes|string',
             'status' => 'sometimes|in:dihuni,tidak_dihuni',
         ]);
 
@@ -68,6 +68,14 @@ class HouseController extends Controller
         ]);
 
         $house->update(['status' => 'dihuni']);
+
+        // Update the resident's alamat to match the house
+        $resident = \App\Models\Resident::find($data['resident_id']);
+        if ($resident) {
+            $alamatBaru = trim("{$house->alamat}", " ,");
+            $resident->update(['alamat' => $alamatBaru]);
+        }
+
         return response()->json(['message' => 'Resident assigned successfully']);
     }
 
@@ -90,6 +98,12 @@ class HouseController extends Controller
 
         if (!DB::table('house_residents')->where('house_id', $house->id)->where('is_active', true)->exists()) {
             $house->update(['status' => 'tidak_dihuni']);
+        }
+
+        // Kosongkan alamat penghuni ketika dihentikan dari rumah
+        $resident = \App\Models\Resident::find($data['resident_id']);
+        if ($resident) {
+            $resident->update(['alamat' => '']); // Atau bisa juga diset menjadi alamat default lainnya
         }
 
         return response()->json(['message' => 'Resident removed successfully']);

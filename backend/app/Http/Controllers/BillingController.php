@@ -11,7 +11,7 @@ class BillingController extends Controller
 {
     public function index(Request $request)
     {
-        return Billing::query()
+        return Billing::with(['house', 'resident', 'feeType'])
             ->when($request->bulan, fn($q, $bulan) => $q->where('bulan', $bulan))
             ->when($request->tahun, fn($q, $tahun) => $q->where('tahun', $tahun))
             ->when($request->status, fn($q, $status) => $q->where('status', $status))
@@ -28,9 +28,10 @@ class BillingController extends Controller
             'bulan' => 'required|integer|min:1|max:12',
             'tahun' => 'required|integer',
             'nominal' => 'required|numeric',
+            'status' => 'sometimes|in:belum_bayar,lunas',
         ]);
 
-        $data['status'] = 'belum_bayar';
+        $data['status'] = $data['status'] ?? 'belum_bayar';
 
         return Billing::create($data);
     }
@@ -41,10 +42,6 @@ class BillingController extends Controller
             'status' => 'required|in:belum_bayar,lunas',
             'keterangan' => 'nullable|string',
         ]);
-
-        if ($data['status'] === 'lunas' && $billing->status !== 'lunas') {
-            $data['tanggal_bayar'] = now();
-        }
 
         $billing->update($data);
         return $billing;
@@ -95,8 +92,7 @@ class BillingController extends Controller
         Billing::whereIn('id', $data['billing_ids'])
             ->where('status', '!=', 'lunas')
             ->update([
-                'status' => 'lunas',
-                'tanggal_bayar' => now(),
+                'status' => 'lunas'
             ]);
 
         return response()->json(['message' => 'Bulk payment successful']);

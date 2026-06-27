@@ -12,12 +12,15 @@ class RtAdministrationTest extends TestCase
     public function test_end_to_end_flow()
     {
         // 0. Seed Fee Types
+        $user = \App\Models\User::factory()->create();
+
         \App\Models\FeeType::create(['nama' => 'Satpam', 'nominal' => 100000, 'deskripsi' => '']);
         \App\Models\FeeType::create(['nama' => 'Kebersihan', 'nominal' => 15000, 'deskripsi' => '']);
 
         // 1. Create resident
-        $residentRes = $this->postJson('/api/residents', [
+        $residentRes = $this->actingAs($user, 'sanctum')->postJson('/api/residents', [
             'nama_lengkap' => 'Budi Tabuti',
+            'alamat' => 'Jalan Kebenaran No 99',
             'status_penghuni' => 'tetap',
             'nomor_telepon' => '08123456789',
             'sudah_menikah' => true,
@@ -25,25 +28,24 @@ class RtAdministrationTest extends TestCase
         $residentId = $residentRes->json('id');
 
         // 2. Create house
-        $houseRes = $this->postJson('/api/houses', [
+        $houseRes = $this->actingAs($user, 'sanctum')->postJson('/api/houses', [
             'nomor_rumah' => 'A99',
             'alamat' => 'Jalan Kebenaran No 99',
-            'blok' => 'A',
             'status' => 'tidak_dihuni'
         ])->assertStatus(201);
         $houseId = $houseRes->json('id');
 
         // 3. Assign resident
-        $this->postJson("/api/houses/{$houseId}/assign-resident", [
+        $this->actingAs($user, 'sanctum')->postJson("/api/houses/{$houseId}/assign-resident", [
             'resident_id' => $residentId,
             'tanggal_masuk' => '2026-06-01'
         ])->assertStatus(200);
 
         // 4. Generate billing
-        $this->postJson('/api/billings/generate')->assertStatus(200);
+        $this->actingAs($user, 'sanctum')->postJson('/api/billings/generate')->assertStatus(200);
 
         // Check if billing is generated for our specific house
-        $billings = $this->getJson('/api/billings')->assertStatus(200);
+        $billings = $this->actingAs($user, 'sanctum')->getJson('/api/billings')->assertStatus(200);
         $this->assertNotEmpty($billings->json());
         
         $myBilling = collect($billings->json())->firstWhere('house_id', $houseId);

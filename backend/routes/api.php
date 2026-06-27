@@ -9,9 +9,15 @@ use App\Http\Controllers\BillingController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FeeTypeController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\AuthController;
 
-// ponytail: skipping auth middleware for now to test APIs cleanly
-Route::apiResource('residents', ResidentController::class);
+Route::post('login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('me', [AuthController::class, 'me']);
+
+    Route::apiResource('residents', ResidentController::class);
 
 Route::apiResource('houses', HouseController::class);
 Route::post('houses/{house}/assign-resident', [HouseController::class, 'assignResident']);
@@ -27,5 +33,6 @@ Route::apiResource('expenses', ExpenseController::class);
 
 Route::apiResource('fee-types', FeeTypeController::class)->only(['index', 'update']);
 
-Route::get('reports/summary', [ReportController::class, 'summary']);
-Route::get('reports/monthly', [ReportController::class, 'monthly']);
+    Route::get('reports/summary', [ReportController::class, 'summary']);
+    Route::get('reports/monthly', [ReportController::class, 'monthly']);
+});
