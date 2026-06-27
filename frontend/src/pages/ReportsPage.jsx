@@ -105,7 +105,7 @@ export default function ReportsPage() {
           </p>
         </div>
         <div className="print:hidden">
-          <Button onClick={handleExportPDF} className="bg-primary text-primary-foreground hover:bg-primary/90">
+          <Button onClick={handleExportPDF} size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:-translate-y-0.5 transition-transform">
             <Download className="mr-2 h-4 w-4" />
             Export PDF
           </Button>

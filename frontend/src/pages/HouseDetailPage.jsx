@@ -85,21 +85,19 @@ export default function HouseDetailPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-2 mb-2">
-        <div>
-          <Button variant="ghost" size="sm" className="pl-0 hover:bg-transparent hover:text-primary text-muted-foreground" asChild>
-            <Link to="/houses" className="flex items-center gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              Kembali ke Daftar Rumah
-            </Link>
-          </Button>
-        </div>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Detail Rumah {house.nomor_rumah}</h2>
           <p className="text-muted-foreground mt-1">
             Informasi lengkap, histori penghuni, dan pembayaran.
           </p>
         </div>
+        <Button variant="default" size="lg" className="shadow-sm hover:-translate-y-0.5 transition-transform" asChild>
+          <Link to="/houses" className="flex items-center gap-2 font-medium">
+            <ArrowLeft className="h-4 w-4" />
+            Kembali ke Daftar
+          </Link>
+        </Button>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">

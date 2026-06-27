@@ -95,7 +95,7 @@ export default function HousesPage() {
             Kelola data rumah, status huni, dan histori penghuni.
           </p>
         </div>
-        <Button onClick={() => setIsAddModalOpen(true)} className="bg-primary text-primary-foreground hover:bg-primary/90">
+        <Button onClick={() => setIsAddModalOpen(true)} size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:-translate-y-0.5 transition-transform">
           <Plus className="mr-2 h-4 w-4" />
           Tambah Rumah
         </Button>
@@ -144,13 +144,24 @@ export default function HousesPage() {
                   }`}>
                     <Home className="h-6 w-6" />
                   </div>
-                  <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                    house.status === 'dihuni'
-                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                      : 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300'
-                  }`}>
-                    {house.status === 'dihuni' ? 'Dihuni' : 'Kosong'}
-                  </span>
+                  <div className="flex flex-col items-end gap-2">
+                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                      house.status === 'dihuni'
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                        : 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300'
+                    }`}>
+                      {house.status === 'dihuni' ? 'Dihuni' : 'Kosong'}
+                    </span>
+                    {house.status === 'dihuni' && house.residents && house.residents.length > 0 && (
+                      <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                        house.residents[0].status_penghuni === 'tetap'
+                          ? 'bg-teal-100 text-teal-800 dark:bg-teal-900/60 dark:text-teal-300'
+                          : 'bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300'
+                      }`}>
+                        {house.residents[0].status_penghuni === 'tetap' ? 'Tetap' : 'Kontrak'}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 
                 <h3 className="font-semibold text-xl mb-1">{house.nomor_rumah}</h3>

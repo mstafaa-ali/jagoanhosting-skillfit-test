@@ -242,7 +242,8 @@ export default function BillingsPage() {
             {generating ? "Generating..." : "Generate Tagihan Bulan Ini"}
           </Button>
           <Button 
-            className="bg-primary text-primary-foreground hover:bg-primary/90" 
+            size="lg"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:-translate-y-0.5 transition-transform" 
             onClick={handleBulkPay} 
             disabled={selectedBills.length === 0 || payingBulk}
           >

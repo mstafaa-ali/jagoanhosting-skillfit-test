@@ -29,7 +29,7 @@ export function MainLayout({ children }) {
   return (
     <div className="flex h-screen overflow-hidden bg-background text-foreground flex-col md:flex-row">
       <div className="md:hidden flex items-center justify-between p-4 border-b bg-card shrink-0">
-        <h2 className="text-xl font-bold tracking-tight text-primary">RT Admin</h2>
+        <h2 className="text-xl font-bold tracking-tight text-primary">SistemAdmin</h2>
         <Button variant="ghost" size="icon" onClick={() => setIsMobileOpen(true)}>
           <Menu className="w-6 h-6" />
         </Button>
@@ -65,10 +65,10 @@ export function MainLayout({ children }) {
           <h2 className="text-2xl font-bold tracking-tight text-primary whitespace-nowrap overflow-hidden transition-all">
             {isSidebarMinimized ? (
               <>
-                <span className="hidden md:inline">RT</span>
-                <span className="inline md:hidden">RT Admin</span>
+                <span className="hidden md:inline">SA</span>
+                <span className="inline md:hidden">SistemAdmin</span>
               </>
-            ) : 'RT Admin'}
+            ) : 'SistemAdmin'}
           </h2>
         </div>
         

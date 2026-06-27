@@ -165,7 +165,7 @@ export default function ResidentsPage() {
             Kelola data warga perumahan, status, dan informasi kontak.
           </p>
         </div>
-        <Button onClick={() => setIsAddModalOpen(true)} className="bg-primary text-primary-foreground hover:bg-primary/90">
+        <Button onClick={() => setIsAddModalOpen(true)} size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:-translate-y-0.5 transition-transform">
           <Plus className="mr-2 h-4 w-4" />
           Tambah Penghuni
         </Button>
