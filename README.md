@@ -1,4 +1,4 @@
-# JagoanHosting SkillFit Test - Fullstack Application
+# JagoanHosting SkillFit Test - Fullstack Developer
 
 Aplikasi ini terdiri dari **Backend (Laravel)** dan **Frontend (React + Vite)**. Berikut adalah panduan langkah demi langkah untuk menjalankan aplikasi ini di lingkungan lokal Anda.
 
