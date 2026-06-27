@@ -83,6 +83,15 @@ Pastikan sistem Anda telah terinstal:
 
 ---
 
+## Akun Default (Autentikasi)
+
+Setelah menjalankan seeder (`php artisan migrate --seed`), Anda dapat login ke dalam aplikasi menggunakan akun default berikut:
+
+- **Email:** `admin@rt.com`
+- **Password:** `password123`
+
+---
+
 ## Menjalankan Pengujian (Testing)
 
 **Backend (Pest / PHPUnit):**
@@ -96,3 +105,5 @@ Dari dalam direktori `frontend`, jalankan:
 ```bash
 npm run test
 ```
+
+---
